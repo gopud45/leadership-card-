@@ -1,0 +1,291 @@
+/* style.css */
+
+/* General Body and Reset */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Open Sans', Arial, sans-serif; /* Fallback for Google Font */
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f8f8; /* Light background for the page */
+}
+
+/* General container for the section */
+.leadership-team-section {
+    width: 90%; /* Adjust as needed */
+    max-width: 1200px; /* Max width for large screens */
+    margin: 60px auto; /* Center the section with some top/bottom margin */
+    padding: 20px;
+}
+
+/* Header for the section */
+.leadership-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.leadership-header h2 {
+    font-size: 2.5em; /* Adjust font size for main heading */
+    color: #2c3e50; /* Dark blue/grey color for main heading */
+    font-weight: 600; /* Semi-bold */
+    margin: 0;
+    font-family: 'Montserrat', sans-serif; /* Fallback for Google Font */
+}
+
+/* Navigation Arrows (essential for the sliding effect) */
+.navigation-arrows {
+    display: flex; /* Ensure arrows are side-by-side */
+    gap: 10px; /* Space between arrows */
+}
+
+.navigation-arrows .arrow {
+    background-color: #ffd700; /* Yellow background as per your image */
+    border: none; /* No default border */
+    color: #333; /* Dark text/arrow color */
+    padding: 8px 12px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for buttons */
+}
+
+.navigation-arrows .arrow:hover {
+    background-color: #e6c200; /* Slightly darker yellow on hover */
+    color: #fff; /* White arrows on hover */
+}
+
+
+/* Container for the individual leader cards (this will be the scrollable area) */
+.leadership-cards-container {
+    display: flex; /* Arrange cards in a row */
+    overflow-x: hidden; /* Hide horizontal scrollbar initially - JS will handle visibility */
+    scroll-behavior: smooth; /* Smooth scrolling when arrows are clicked */
+    gap: 30px; /* Space between cards */
+    padding-bottom: 10px; /* Give some space for potential scrollbar */
+    justify-content: flex-start; /* Align cards to the start, allow overflow */
+    align-items: flex-start; /* Align cards to the top */
+    -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.leadership-cards-container::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* Individual Leader Card Styling */
+.leader-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    overflow: hidden; /* Important for the bio expansion - crucial for fixed overlay */
+    text-align: center;
+    padding: 20px;
+    position: relative; /* For absolute positioning of bio */
+    flex: 0 0 calc(33.333% - 20px); /* Display 3 cards per row, accounting for gap */
+    max-width: 350px; /* Max width for each card */
+    min-width: 280px; /* Ensure cards don't get too small before wrapping on smaller screens */
+    /* Set a consistent minimum height for all cards. This is important for alignment. */
+    min-height: 380px; /* ADJUST THIS VALUE to ensure all initial content fits well */
+    cursor: default; /* Not directly clickable, so change cursor */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.leader-card:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.leader-photo-wrapper {
+    width: 150px; /* Adjust size as needed */
+    height: 150px;
+    margin: 0 auto 15px; /* Center photo and add margin below */
+    border-radius: 50%; /* Make it round */
+    overflow: hidden; /* Clip image to round shape */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.leader-photo-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the container */
+    filter: grayscale(100%); /* Make image black and white */
+    display: block; /* Remove extra space below image */
+    transition: filter 0.3s ease; /* Smooth transition for grayscale */
+}
+
+/* Optional: On hover, make the image full color */
+/* .leader-card:hover .leader-photo-wrapper img {
+    filter: grayscale(0%);
+} */
+
+
+.leader-name,
+.leader-title,
+.leader-social {
+    /* Keep these transitions for other potential hover effects, but removed opacity/transform for this specific request */
+    transition: all 0.3s ease; /* Maintain smooth transition if other properties change */
+    pointer-events: auto; /* Allow interaction when visible */
+    /* These elements will now simply be covered by the .leader-bio on hover */
+}
+
+.leader-name {
+    font-size: 1.6em; /* Adjust name font size */
+    color: #2c3e50; /* Dark blue/grey */
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.leader-title {
+    font-size: 1.1em; /* Adjust title font size */
+    color: #555; /* Slightly lighter grey for title */
+    margin-bottom: 15px;
+}
+
+.leader-social {
+    margin-bottom: 15px; /* Space below social icons */
+}
+
+.leader-social a {
+    display: inline-block;
+    margin: 0 5px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.leader-social a:hover {
+    opacity: 1;
+}
+
+.leader-social img {
+    width: 24px; /* Size of social icons */
+    height: 24px;
+    vertical-align: middle;
+}
+
+/* Removed the .leader-card:hover .leader-name, .leader-title, .leader-social rules
+   because these elements should now be covered, not disappear. */
+
+
+/* Biography Box Styling (Yellow overlay on hover) */
+.leader-bio {
+    background-color: #046BD2; /* Yellow background for bio as per your image */
+    color: #ffffff; /* Dark text for bio */
+    padding: 0 20px; /* Initially no top/bottom padding */
+    font-size: 0.95em;
+    text-align: left; /* Align bio text to the left */
+    line-height: 1.6;
+    opacity: 0; /* Initially invisible */
+    position: absolute;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box; /* Include padding in calculations */
+
+    /* --- IMPORTANT: NEW VALUES FOR FIXED POSITION & HEIGHT --- */
+    /* This defines where the top of the yellow box will be.
+       Adjust this 'px' value based on your image and card layout.
+       It looks like it starts roughly around 180px from the top of the card in your example images.
+       You'll need to fine-tune this for your exact card dimensions. */
+    top: 180px; /* Example: Position the top of the yellow box */
+    /* This defines the fixed height of the yellow box when active. */
+    height: calc(100% - 180px); /* Fill the rest of the card height from 'top' */
+    /* Initially hide below its final position */
+    transform: translateY(100%);
+    overflow-y: hidden; /* Hide scrollbar when not active */
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Smooth transition for appearing */
+}
+
+/* When the card is hovered, expand and show the bio */
+.leader-card:hover .leader-bio {
+    opacity: 1; /* Make visible */
+    transform: translateY(0); /* Slides up to its 'top' position */
+    overflow-y: auto; /* Enable vertical scrollbar if content exceeds the fixed height */
+    padding-top: 20px; /* Apply padding when visible */
+    padding-bottom: 20px; /* Apply padding when visible */
+
+    /* Optional: Style the scrollbar for webkit browsers */
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px; /* For horizontal scroll if any */
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0,0,0,0.2); /* Darker thumb */
+        border-radius: 4px;
+    }
+    &::-webkit-scrollbar-track {
+        background-color: rgba(0,0,0,0.1); /* Lighter track */
+    }
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .leader-card {
+        flex: 0 0 calc(50% - 20px); /* 2 cards per row on medium screens */
+        max-width: none; /* Allow flex to control width */
+        min-height: 360px; /* Adjust min-height for this breakpoint */
+    }
+    .leader-bio {
+        top: 160px; /* Adjust for smaller screens */
+        height: calc(100% - 160px);
+    }
+}
+
+@media (max-width: 768px) {
+    .leadership-team-section {
+        margin: 40px auto;
+        padding: 10px;
+    }
+    .leader-card {
+        flex: 0 0 90%; /* Approx 1 card per row on small screens, with some side padding */
+        max-width: 400px; /* Limit width of single card */
+        min-height: 350px; /* Adjust min-height for this breakpoint */
+    }
+    .leader-bio {
+        top: 150px; /* Adjust for smaller screens */
+        height: calc(100% - 150px);
+    }
+    .leadership-header {
+        flex-direction: column;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .leadership-header h2 {
+        font-size: 2.2em;
+        margin-bottom: 15px;
+    }
+    .navigation-arrows {
+        margin-top: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .leader-card {
+        padding: 15px;
+        min-height: 340px; /* Adjust min-height for this breakpoint */
+    }
+    .leader-name {
+        font-size: 1.4em;
+    }
+    .leader-title {
+        font-size: 1em;
+    }
+    .leader-bio {
+        font-size: 0.9em;
+        padding: 15px;
+        top: 140px; /* Adjust for smallest screens */
+        height: calc(100% - 140px);
+    }
+    .leader-card:hover .leader-bio {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+}
