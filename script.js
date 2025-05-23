@@ -1,54 +1,81 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const prevArrow = document.querySelector('.prev-arrow');
-    const nextArrow = document.querySelector('.next-arrow');
-    const cardsContainer = document.querySelector('.leadership-cards-container');
-    const leaderCards = document.querySelectorAll('.leader-card');
+    // JavaScript for custom arrows (only for desktop/tablet grid view)
+    const prevArrow = document.querySelector('.custom-navigation-arrows .prev-arrow');
+    const nextArrow = document.querySelector('.custom-navigation-arrows .next-arrow');
+    // Target the specific row that contains the cards for desktop,
+    // and make it horizontally scrollable with flex-nowrap.
+    const desktopGridContainer = document.getElementById('desktopGridContainer');
 
-    if (prevArrow && nextArrow && cardsContainer && leaderCards.length > 0) {
-        let scrollPosition = 0;
-        // Calculate the scroll amount: width of one card + the gap (30px from CSS)
-        // Adjust '30' if you change the 'gap' in style.css
-        const cardScrollAmount = leaderCards[0].offsetWidth + 30;
+    if (prevArrow && nextArrow && desktopGridContainer) {
+        // Initialize scrollPosition to current scroll if page loads scrolled
+        let scrollPosition = desktopGridContainer.scrollLeft;
 
-        // Check if there are more cards than can be displayed initially
-        // This makes the arrows only appear if necessary
-        const maxScrollableWidth = cardsContainer.scrollWidth - cardsContainer.clientWidth;
-        if (maxScrollableWidth <= 0) {
-            // Hide arrows if all cards fit without scrolling
-            prevArrow.style.display = 'none';
-            nextArrow.style.display = 'none';
-        } else {
-            // Show arrows if scrolling is needed
-            prevArrow.style.display = 'block'; // Or 'inline-block' depending on styling
-            nextArrow.style.display = 'block'; // Or 'inline-block'
-        }
+        // Function to get the scroll amount (width of one column + its margin/gap)
+        const getCardScrollAmount = () => {
+            // Find the first visible 'col' element within the grid container
+            const firstCardCol = desktopGridContainer.querySelector('.col');
+            if (firstCardCol) {
+                const cardWidth = firstCardCol.offsetWidth;
+                // Get the actual grid gap, Bootstrap's g-4 is variable but typically uses rem for gap
+                const computedStyle = window.getComputedStyle(desktopGridContainer);
+                // Bootstrap uses `gap` CSS property for `g-` classes
+                const gap = parseFloat(computedStyle.columnGap || computedStyle.getPropertyValue('column-gap')) || 0;
+                return cardWidth + gap;
+            }
+            return 0;
+        };
 
+        // Function to update custom arrow visibility based on scroll position
+        const updateArrowVisibility = () => {
+            const maxScrollableWidth = desktopGridContainer.scrollWidth - desktopGridContainer.clientWidth;
+
+            // If content fits without scrolling, hide arrows
+            if (maxScrollableWidth <= 1) { // Small threshold for floating point math
+                prevArrow.style.display = 'none';
+                nextArrow.style.display = 'none';
+            } else {
+                prevArrow.style.display = 'block';
+                nextArrow.style.display = 'block';
+
+                // Hide prev arrow if at the start
+                if (desktopGridContainer.scrollLeft === 0) {
+                    prevArrow.style.display = 'none';
+                }
+                // Hide next arrow if at the end (allowing for minor pixel variations)
+                if (desktopGridContainer.scrollLeft >= maxScrollableWidth - 1) {
+                    nextArrow.style.display = 'none';
+                }
+            }
+        };
+
+        // Add an event listener for scrolling on the container itself
+        desktopGridContainer.addEventListener('scroll', updateArrowVisibility);
+        // Call on initial load and window resize
+        updateArrowVisibility();
+        window.addEventListener('resize', updateArrowVisibility);
 
         nextArrow.addEventListener('click', () => {
-            scrollPosition += cardScrollAmount;
-            // Prevent scrolling too far right
-            if (scrollPosition > maxScrollableWidth) {
-                scrollPosition = maxScrollableWidth;
-            }
-            cardsContainer.scrollTo({
+            const scrollAmount = getCardScrollAmount();
+            scrollPosition = desktopGridContainer.scrollLeft + scrollAmount; // Use current scrollLeft as base
+            desktopGridContainer.scrollTo({
                 left: scrollPosition,
                 behavior: 'smooth'
             });
         });
 
         prevArrow.addEventListener('click', () => {
-            scrollPosition -= cardScrollAmount;
-            // Prevent scrolling too far left
+            const scrollAmount = getCardScrollAmount();
+            scrollPosition = desktopGridContainer.scrollLeft - scrollAmount; // Use current scrollLeft as base
             if (scrollPosition < 0) {
-                scrollPosition = 0;
+                scrollPosition = 0; // Don't scroll past the beginning
             }
-            cardsContainer.scrollTo({
+            desktopGridContainer.scrollTo({
                 left: scrollPosition,
                 behavior: 'smooth'
             });
         });
     }
 
-    // No need for click handlers on individual cards for the hover effect,
-    // as that's purely CSS-driven now.
+    // Bootstrap Carousel automatically handles navigation on mobile.
+    // No custom JS is needed for the carousel beyond its initialization (data-bs-ride="carousel").
 });
